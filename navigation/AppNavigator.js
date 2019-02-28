@@ -4,6 +4,7 @@ import { createAppContainer, createSwitchNavigator, createStackNavigator } from 
 import MainTabNavigator from './MainTabNavigator'
 import AllDecksScreen from '../screens/AllDecks'
 import NewDeckScreen from '../screens/NewDeck'
+import NewCardScreen from '../screens/NewCard'
 import SingleDeckScreen from '../screens/SingleDeck'
 
 export default createAppContainer(createStackNavigator({
@@ -16,5 +17,8 @@ export default createAppContainer(createStackNavigator({
   },
   SingleDeck : {
     screen: SingleDeckScreen
+  },
+  NewCard : {
+    screen: NewCardScreen
   }
 }));

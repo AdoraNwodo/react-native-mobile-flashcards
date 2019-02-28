@@ -2,9 +2,9 @@ import React from 'react'
 import { View, StyleSheet, TextInput, Text, TouchableOpacity } from 'react-native'
 import { gray, white, black } from '../utils/colors'
 
-export default class NewDeck extends React.Component {
+export default class NewCard extends React.Component {
   static navigationOptions = {
-    title: 'Add Deck'
+    title: 'Add Card'
   };
 
   onPress(){
@@ -14,8 +14,9 @@ export default class NewDeck extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.text} >What is the title of your new Deck?</Text>
-        <TextInput style={styles.input} placeholder='Deck Title' />
+        <Text style={styles.text} >Add a card to: hello hows it going</Text>
+        <TextInput style={styles.input} placeholder='Question' />
+        <TextInput style={styles.input} placeholder='Answer' />
         <TouchableOpacity 
           onPress={this.onPress}
           style={styles.button}
@@ -38,12 +39,13 @@ const styles = StyleSheet.create({
   input: {
     borderBottomColor: gray,
     borderBottomWidth: 1,
-    fontSize: 20
+    fontSize: 20,
+    marginTop: 30
   },
   text: {
     textAlign: 'center',
-    marginBottom: 50,
-    fontSize: 40
+    marginBottom: 30,
+    fontSize: 30
   },
   button: {
     alignItems: 'center',

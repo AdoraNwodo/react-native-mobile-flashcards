@@ -8,6 +8,10 @@ export default class SingleDeck extends React.Component {
     title: 'Single Deck',
   };
 
+  toAddCardScreen(){
+    this.props.navigation.push('NewCard')
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -20,7 +24,7 @@ export default class SingleDeck extends React.Component {
           <Text style={styles.subtitle}>12 cards</Text>
         </View>
         
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={ () => this.toAddCardScreen() }>
           <View style={styles.row}>
             <Text style={[ styles.action, {color: blue} ]}>Add Card</Text>
           </View>
