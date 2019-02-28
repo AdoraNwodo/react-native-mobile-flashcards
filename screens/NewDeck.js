@@ -4,7 +4,7 @@ import { gray, white, black } from '../utils/colors'
 
 export default class NewDeck extends React.Component {
   static navigationOptions = {
-    title: 'New Deck',
+    title: 'New Deck'
   };
 
   onPress(){

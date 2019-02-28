@@ -5,7 +5,7 @@ import { gray, lightgray, white } from '../utils/colors'
 export default class AllDecks extends React.Component {
   static navigationOptions = {
     title: 'All Decks',
-  }
+  };
 
   state = {
     decks: [
@@ -26,8 +26,9 @@ export default class AllDecks extends React.Component {
   }
 
   actionOnRow(item) {
-    console.log('Selected Item :',item);
- }
+    // console.log('Selected Item :',item);
+    this.props.navigation.push('SingleDeck')
+  }
 
   render() {
     const { decks } = this.state
