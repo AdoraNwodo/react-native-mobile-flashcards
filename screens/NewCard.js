@@ -35,7 +35,6 @@ class NewCard extends React.Component {
       question: question,
       answer: answer
     }
-    console.log("Title is ", deck.title)
     this.props.dispatch(handleAddQuestionToDeck(deck.title, card))
     this.props.navigation.pop()
   }

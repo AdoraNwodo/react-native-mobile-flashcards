@@ -3,6 +3,7 @@ import { Platform, View, StyleSheet, Text, TouchableOpacity, Alert } from 'react
 import { gray, lightgray, white, black, blue, red } from '../utils/colors'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
+import { handleDeleteDeck } from '../actions/decks'
 
 class SingleDeck extends React.Component {
   static navigationOptions = {
@@ -16,7 +17,11 @@ class SingleDeck extends React.Component {
     })
   }
 
-  deleteDeck(){
+  toQuizScreen(){
+    this.props.navigation.push('Quiz')
+  }
+
+  showDeleteDeckAlert(){
     Alert.alert(
       'Delete Deck',
       'Deleting will remove this deck and its cards from this device ',
@@ -26,10 +31,16 @@ class SingleDeck extends React.Component {
           onPress: () => null,
           style: 'cancel',
         },
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
-      ],
-      {cancelable: true},
+        { text: 'OK', onPress: () => this.deleteDeck() },
+      ]
     )
+  }
+
+  deleteDeck(){
+    const { deck } = this.props
+    console.log("Title is ", deck.title)
+    this.props.dispatch(handleDeleteDeck(deck.title))
+    this.props.navigation.pop()
   }
 
   render() {
@@ -66,9 +77,9 @@ class SingleDeck extends React.Component {
         </TouchableOpacity>
         
         { deck.questions.length > 0 &&
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={ () => this.toQuizScreen() }>
             <View style={styles.row}>
-              <Text style={[ styles.action, {color: blue} ]}>Start Quiz</Text>
+              <Text style={[ styles.action, {color: blue} ]} >Start Quiz</Text>
             </View>
           </TouchableOpacity>
         }

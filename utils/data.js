@@ -14,14 +14,15 @@ const getDeck = async(key) => {
 }
 
 const removeDeck = async(key) => {
-    const decks = AsyncStorage.getItem(DECK_DB_KEY)
+    const decks = await AsyncStorage.getItem(DECK_DB_KEY)
     let data = JSON.parse(decks)
     data[key] = undefined
     delete data[key]
-    return AsyncStorage.setItem(DECK_DB_KEY, JSON.stringify(data))
+    await AsyncStorage.setItem(DECK_DB_KEY, JSON.stringify(data))
+    return await getDecks()
 }
 
-const clearAll = async(key) => {
+const clearAll = async() => {
     await AsyncStorage.clear()
 }
 

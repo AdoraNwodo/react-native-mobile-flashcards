@@ -1,14 +1,12 @@
-import React from 'react'
-import { createAppContainer, createSwitchNavigator, createStackNavigator } from 'react-navigation'
+import { createAppContainer, createStackNavigator } from 'react-navigation'
 
-import MainTabNavigator from './MainTabNavigator'
 import AllDecksScreen from '../screens/AllDecks'
 import NewDeckScreen from '../screens/NewDeck'
 import NewCardScreen from '../screens/NewCard'
 import SingleDeckScreen from '../screens/SingleDeck'
+import QuizScreen from '../screens/Quiz'
 
 export default createAppContainer(createStackNavigator({
-  // Main: MainTabNavigator,
   AllDecks:{
     screen: AllDecksScreen
   },
@@ -20,5 +18,8 @@ export default createAppContainer(createStackNavigator({
   },
   NewCard : {
     screen: NewCardScreen
+  },
+  Quiz : {
+    screen: QuizScreen
   }
 }));
