@@ -1,72 +1,57 @@
 import { AsyncStorage } from 'react-native'
 
-export default getDecks = async() => {
-    try {
-        const keys = await AsyncStorage.getAllKeys()
-        const items = await AsyncStorage.multiGet(keys)
-        console.log("Deck received! ")
-        return items
-    } catch (error) {
-        console.log(error, "problem")
-    }
+const DECK_DB_KEY = 'AdoraNwodo:MobileFlashcards_Deck'
+
+const getDecks = async() => {
+    const decks = await AsyncStorage.getItem(DECK_DB_KEY)
+    return JSON.parse(decks)
 }
 
-export default getDeck = async(key) => {
-    try {
-        const item = await AsyncStorage.getItem(key)
-        console.log("Deck received! ")
-        return item
-    } catch (error) {
-        console.log(error, "problem getting item")
-    }
+const getDeck = async(key) => {
+    const decks = await AsyncStorage.getItem(DECK_DB_KEY)
+    const json = JSON.parse(decks)
+    return json[key]
 }
 
-export default removeDeck = async(key) => {
-    try {
-        const item = await AsyncStorage.removeItem(key)
-        console.log("Deck removed! ")
-        return item
-    } catch (error) {
-        console.log(error, "problem removing item")
-    }
+const removeDeck = async(key) => {
+    const decks = AsyncStorage.getItem(DECK_DB_KEY)
+    let data = JSON.parse(decks)
+    data[key] = undefined
+    delete data[key]
+    return AsyncStorage.setItem(DECK_DB_KEY, JSON.stringify(data))
 }
 
-export default clearAll = async(key) => {
-    try {
-        const item = await AsyncStorage.clear()
-        console.log("DB cleared")
-    } catch (error) {
-        console.log(error, "problem clearing db")
-    }
+const clearAll = async(key) => {
+    await AsyncStorage.clear()
 }
 
-export default saveDeckTitle = async (title) => {
+const saveDeckTitle = async (title) => {
+
     const deckProperties = {
-        title,
-        questions: []
+        [title]: {
+            title: title,
+            questions: []
+        }
     }
 
-    try {
-        const deck = await AsyncStorage.setItem(title, deckProperties)
-        console.log("Deck saved! ")
-        return deck
-    } catch (error) {
-        console.log("Error saving deck title")
-        console.log(error)
-    }
+    await AsyncStorage.mergeItem(DECK_DB_KEY, JSON.stringify(deckProperties))
+    return await getDecks()
 }
 
-export default addCardToDeck = async (title, card) => {
-    // get the current deck properties
-    let deckProperties = await AsyncStorage.getItem(title)
-    deckProperties.questions.push(card)
+const addCardToDeck = async (title, card) => {
+    const deck = await AsyncStorage.getItem(DECK_DB_KEY)
+    let data = JSON.parse(deck)
+    data[title].questions.push(card);
+    await AsyncStorage.setItem(DECK_DB_KEY, JSON.stringify(data))
+    
+    return await getDecks()
+}
 
-    try {
-        const deck = await AsyncStorage.mergeItem(title, deckProperties)
-        console.log("Deck merged! ")
-        return deck
-    } catch (error) {
-        console.log("Error merging deck title")
-        console.log(error)
-    }
+module.exports = {
+    getDecks,
+    getDeck,
+    removeDeck,
+    clearAll,
+    saveDeckTitle,
+    addCardToDeck
 }

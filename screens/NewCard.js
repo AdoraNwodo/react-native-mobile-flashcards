@@ -1,22 +1,65 @@
 import React from 'react'
 import { View, StyleSheet, TextInput, Text, TouchableOpacity } from 'react-native'
 import { gray, white, black } from '../utils/colors'
+import { handleAddQuestionToDeck } from '../actions/decks'
+import { connect } from 'react-redux'
 
-export default class NewCard extends React.Component {
+class NewCard extends React.Component {
   static navigationOptions = {
     title: 'Add Card'
-  };
+  }
+
+  constructor(props) {
+    super(props);
+    this.handleQuestionInputChange = this.handleQuestionInputChange.bind(this)
+    this.handleAnswerInputChange = this.handleAnswerInputChange.bind(this)
+    this.onPress = this.onPress.bind(this)
+    this.state = {
+      deck: {},
+      question: '',
+      answer: ''
+    }
+  }
+
+  handleQuestionInputChange(value) {
+    this.setState({ question: value });
+  }
+
+  handleAnswerInputChange(value) {
+    this.setState({ answer: value });
+  }
 
   onPress(){
-    console.log("pressed. yay")
+    const { question, answer, deck } = this.state
+    const card = {
+      question: question,
+      answer: answer
+    }
+    console.log("Title is ", deck.title)
+    this.props.dispatch(handleAddQuestionToDeck(deck.title, card))
+    this.props.navigation.pop()
+  }
+
+  componentDidMount(){
+    const {deck} = this.props.navigation.state.params
+    this.setState({ deck })
   }
 
   render() {
+    const { deck } = this.state 
     return (
       <View style={styles.container}>
-        <Text style={styles.text} >Add a card to: hello hows it going</Text>
-        <TextInput style={styles.input} placeholder='Question' />
-        <TextInput style={styles.input} placeholder='Answer' />
+        <Text style={styles.text} >Add a card to: {deck.title}</Text>
+        <TextInput 
+          style={styles.input} 
+          placeholder='Question' 
+          onChangeText={(text) => this.handleQuestionInputChange(text) }
+          value={this.state.title} />
+        <TextInput
+          style={styles.input}
+          placeholder='Answer'
+          onChangeText={(text) => this.handleAnswerInputChange(text) }
+          value={this.state.title} />
         <TouchableOpacity 
           onPress={this.onPress}
           style={styles.button}
@@ -27,6 +70,7 @@ export default class NewCard extends React.Component {
     );
   }
 }
+export default connect()(NewCard)
 
 const styles = StyleSheet.create({
   container: {

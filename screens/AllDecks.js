@@ -1,64 +1,70 @@
 import React from 'react'
-import { Platform, View, Text, FlatList, StyleSheet, TouchableHighlight, TouchableOpacity } from 'react-native'
+import { 
+  Platform, 
+  View, 
+  Text, 
+  FlatList, 
+  StyleSheet, 
+  TouchableHighlight, 
+  TouchableOpacity,
+  NavigationActions
+} from 'react-native'
 import { gray, lightgray, white, black } from '../utils/colors'
 import Icon from 'react-native-vector-icons/Ionicons'
+import { getDecks, clearAll } from '../utils/data'
+import { connect } from 'react-redux'
+import { handleInitialData } from '../actions/decks'
 
-export default class AllDecks extends React.Component {
+class AllDecks extends React.Component {
   static navigationOptions = {
     title: 'All Decks',
-  };
-
-  state = {
-    decks: [
-        { title: "Agriculture", capacity: 5 },
-        { title: "Lifestyle", capacity: 7 },
-        { title: "Music", capacity: 3 },
-        { title: "Technology", capacity: 2 },
-        { title: "Fashion", capacity: 9 },
-        { title: "Art", capacity: 30 },
-        { title: "Business", capacity: 15 },
-        { title: "Politics", capacity: 12 },
-        { title: "Technology", capacity: 2 },
-        { title: "Fashion", capacity: 9 },
-        { title: "Art", capacity: 30 },
-        { title: "Business", capacity: 15 },
-        { title: "Politics", capacity: 12 },
-        { title: "Technology", capacity: 2 },
-        { title: "Fashion", capacity: 9 },
-        { title: "Art", capacity: 30 },
-        { title: "Business", capacity: 15 },
-        { title: "Politics", capacity: 12 },
-    ]
   }
 
-  actionOnRow(item) {
-    // console.log('Selected Item :',item);
-    this.props.navigation.push('SingleDeck')
+  componentDidMount(){
+    //clearAll()
+    // this.fetchAllDecks()
+    this.props.dispatch(handleInitialData())
+    console.log("Props - ", this.props.decks)
+  }
+
+  fetchAllDecks(){
+    getDecks()
+      .then((decks) => {
+        this.setState({ decks: Object.values(decks) })
+      })
+  }
+
+  state = {
+    decks: null,
+  }
+
+  toSingleDeck(deck) {
+
+    this.props.navigation.push('SingleDeck', {
+      deck: deck
+    })
   }
 
   toNewDeckScreen() {
     this.props.navigation.push('NewDeck')
-    // this.props.navigation.goBack()
   }
 
   render() {
-    const { decks } = this.state
+    const { decks } = this.props
     return (
       <View style={styles.container}>
-        <FlatList 
-          data={decks}  
-          renderItem={({item}) => 
-          <TouchableHighlight key={item.title} style={styles.deck} onPress={ () => this.actionOnRow(item)} underlayColor={lightgray}>
+        {decks !== null && <FlatList 
+          data={Object.values(decks)}  
+          renderItem={({item}) =>
+          <TouchableHighlight key={item.title} style={styles.deck} onPress={ () => this.toSingleDeck(item.title)} underlayColor={lightgray}>
             <View>
-         
                 <Text style={styles.decktitle}>{item.title}</Text>
-                <Text style={styles.deckcapacity}>{item.capacity} cards</Text>
-              
+                <Text style={styles.deckcapacity}>{item.questions.length} cards</Text>          
             </View>
             </TouchableHighlight>
           }
           keyExtractor={(item, index) => index.toString()}
-        />
+        /> }
         <TouchableOpacity
           onPress={ () => this.toNewDeckScreen() }
           style={{
@@ -89,6 +95,14 @@ export default class AllDecks extends React.Component {
     );
   }
 }
+function mapStateToProps (decks) {
+  return { 
+    decks: decks
+      ? decks
+      : null
+  }
+}
+export default connect(mapStateToProps)(AllDecks)
 
 const styles = StyleSheet.create({
   container: {

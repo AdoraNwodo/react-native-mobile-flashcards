@@ -1,51 +1,100 @@
 import React from 'react'
-import { Platform, View, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { Platform, View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native'
 import { gray, lightgray, white, black, blue, red } from '../utils/colors'
 import Icon from 'react-native-vector-icons/Ionicons'
+import { connect } from 'react-redux'
 
-export default class SingleDeck extends React.Component {
+class SingleDeck extends React.Component {
   static navigationOptions = {
     title: 'Single Deck',
-  };
+  }
 
   toAddCardScreen(){
-    this.props.navigation.push('NewCard')
+    const { deck } = this.props
+    this.props.navigation.push('NewCard', {
+      deck
+    })
+  }
+
+  deleteDeck(){
+    Alert.alert(
+      'Delete Deck',
+      'Deleting will remove this deck and its cards from this device ',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ],
+      {cancelable: true},
+    )
   }
 
   render() {
+    const { deck } = this.props
+
+    if(deck === undefined || deck === null){
+      return(
+        <View style={styles.container}>
+        </View>
+      )
+    }
+      
     return (
       <View style={styles.container}>
-
+        { deck !== null && 
         <View style={styles.titleContainer}>
           <View style={styles.circle}>
-            <Text style={styles.pictureletter}>D</Text>
+            <Text style={styles.pictureletter}>{ deck.title[0] }</Text>
           </View>
-          <Text style={styles.title}>Deck 1</Text>
-          <Text style={styles.subtitle}>12 cards</Text>
-        </View>
+          <Text style={styles.title}>{ deck.title }</Text>
+          <Text style={styles.subtitle}>{ deck.questions.length } cards</Text>
+        </View> }
+
+        { deck.questions.length === 0 && 
+          <Text style={{ textAlign: 'center', fontSize: 20, marginBottom: 40 }}>
+            You cannot take this quiz because questions (cards) do not exist in this deck. Add some questions here to start.
+          </Text>
+        }
         
         <TouchableOpacity style={styles.button} onPress={ () => this.toAddCardScreen() }>
           <View style={styles.row}>
             <Text style={[ styles.action, {color: blue} ]}>Add Card</Text>
           </View>
         </TouchableOpacity>
+        
+        { deck.questions.length > 0 &&
+          <TouchableOpacity style={styles.button}>
+            <View style={styles.row}>
+              <Text style={[ styles.action, {color: blue} ]}>Start Quiz</Text>
+            </View>
+          </TouchableOpacity>
+        }
 
-        <TouchableOpacity style={styles.button}>
-          <View style={styles.row}>
-            <Text style={[ styles.action, {color: blue} ]}>Start Quiz</Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => this.deleteDeck()}>
           <View style={styles.row}>
             <Text style={[ styles.action, {color: red} ]}>Delete Deck</Text>
           </View>
         </TouchableOpacity>
-
       </View>
     );
   }
 }
+
+function mapStateToProps (decks, props) {
+
+  const deckId = props.navigation.state.params.deck
+  return { 
+    deck: decks
+      ? decks[deckId]
+      : null
+  }
+  
+}
+
+export default connect(mapStateToProps)(SingleDeck)
 
 const styles = StyleSheet.create({
   container: {
