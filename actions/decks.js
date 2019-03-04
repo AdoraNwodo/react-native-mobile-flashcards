@@ -1,7 +1,6 @@
 import { removeDeck, addCardToDeck, getDecks, saveDeckTitle } from '../utils/data'
 
 export const GET_ALL_DECKS = 'GET_ALL_DECKS'
-export const GET_DECK = 'GET_DECK'
 
 export function handleInitialData () {
     return (dispatch) => {
@@ -16,13 +15,6 @@ export function getAllDecks (decks) {
     return {
         type: GET_ALL_DECKS,
         decks
-    }
-}
-
-export function getDeck (deck) {
-    return {
-        type: GET_DECK,
-        deck
     }
 }
 
@@ -48,7 +40,6 @@ export function handleDeleteDeck (key) {
     return (dispatch) => {
       return removeDeck(key)
       .then((decks) => {
-        console.log("Res,,", decks)
         dispatch(getAllDecks(decks))
       })
     }

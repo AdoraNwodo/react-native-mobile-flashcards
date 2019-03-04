@@ -1,7 +1,6 @@
 import React from 'react'
-import { Platform, View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native'
-import { gray, lightgray, white, black, blue, red } from '../utils/colors'
-import Icon from 'react-native-vector-icons/Ionicons'
+import { View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native'
+import { gray, lightgray, white, blue, red } from '../utils/colors'
 import { connect } from 'react-redux'
 import { handleDeleteDeck } from '../actions/decks'
 
@@ -18,7 +17,10 @@ class SingleDeck extends React.Component {
   }
 
   toQuizScreen(){
-    this.props.navigation.push('Quiz')
+    const { deck } = this.props
+    this.props.navigation.push('Quiz', {
+      deck
+    })
   }
 
   showDeleteDeckAlert(){
